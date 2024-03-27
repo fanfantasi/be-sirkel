@@ -3,7 +3,7 @@ import prisma from "../services/prisma";
 import responseData from "../services/response";
 var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
-import { uploadsController } from "../controller/upload.controller";
+import { uploadsController } from "./upload.controller";
 
 
 export const pictureController = {
@@ -22,7 +22,7 @@ export const pictureController = {
             const orderBy = randomPick(['caption', 'createdAt']);
             const orderDir = randomPick([`asc`, `asc`]);
             if (Object.keys(req.query).length !== 0){
-                state = await prisma.pictures.findMany({
+                state = await prisma.content.findMany({
                     where: req.query,
                     select:{
                         id:true,
@@ -77,14 +77,14 @@ export const pictureController = {
                     skip:(page < 2 ? 0 : page-1) * limit,
                     take:limit
                 });
-                totalPage = await prisma.pictures.count({
+                totalPage = await prisma.content.count({
                     where: req.query,
                     select: {
                     _all: true,
                     },
                 })
             }else{
-                state = await prisma.pictures.findMany({
+                state = await prisma.content.findMany({
                     select:{
                         id:true,
                         caption:true,
@@ -138,7 +138,7 @@ export const pictureController = {
                     skip:(page < 2 ? 0 : page-1) * limit,
                     take:limit
                 });
-                totalPage = await prisma.pictures.count({
+                totalPage = await prisma.content.count({
                     select: {
                     _all: true,
                     },
@@ -167,7 +167,7 @@ export const pictureController = {
             }
             let saveData:any;
             if (typeof req.body.id === 'undefined') {
-                saveData = await prisma.pictures.create({
+                saveData = await prisma.content.create({
                     data:{
                         caption: req.body?.caption,
                         categoryId: req.body?.category,
@@ -185,7 +185,7 @@ export const pictureController = {
                     });
                 }
             }else{
-                saveData = await prisma.pictures.update({
+                saveData = await prisma.content.update({
                     where:{
                         id: req.body?.id
                     },

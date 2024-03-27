@@ -23,7 +23,7 @@ model Users {
   bio             String?
   verification    Boolean @default(false)
   address         Address?
-  posts           Pictures[]
+  posts           Content[]
   shared          Shared[]
   like            Likes[]
   views           Views[]
@@ -57,7 +57,7 @@ model Refreshtoken {
   updatedAt   DateTime?         @updatedAt
 }
 
-model Pictures {
+model Content {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   file          Files[]
   music         Music?    @relation(fields: [musicId], references: [id])
@@ -84,7 +84,7 @@ model Pictures {
 
 model Mentions {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  post        Pictures        @relation(fields: [postId], references: [id])
+  post        Content         @relation(fields: [postId], references: [id])
   postId      String          @db.ObjectId
   user        Users           @relation(fields: [userId], references: [id])
   userId      String          @db.ObjectId
@@ -97,7 +97,7 @@ model Music {
   name      String
   cover     String?
   artist    String?
-  pictures  Pictures[]
+  pictures  Content[]
 }
 
 model Files {
@@ -106,13 +106,13 @@ model Files {
   height    Int?
   width     Int?
   type      String?
-  post      Pictures  @relation(fields: [postId], references: [id])
+  post      Content  @relation(fields: [postId], references: [id])
   postId    String    @db.ObjectId
 }
 
 model Shared {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  post      Pictures  @relation(fields: [postId], references: [id])
+  post      Content   @relation(fields: [postId], references: [id])
   postId    String    @db.ObjectId
   author    Users     @relation(fields: [authorId], references: [id])
   authorId  String    @db.ObjectId
@@ -120,7 +120,7 @@ model Shared {
 
 model Likes {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  post      Pictures  @relation(fields: [postId], references: [id])
+  post      Content   @relation(fields: [postId], references: [id])
   postId    String    @db.ObjectId
   author    Users     @relation(fields: [authorId], references: [id])
   authorId  String    @db.ObjectId
@@ -128,7 +128,7 @@ model Likes {
 
 model Views {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  post      Pictures  @relation(fields: [postId], references: [id])
+  post      Content   @relation(fields: [postId], references: [id])
   postId    String    @db.ObjectId
   author    Users     @relation(fields: [authorId], references: [id])
   authorId  String    @db.ObjectId
@@ -137,7 +137,7 @@ model Views {
 model Comments {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   comment   String
-  post      Pictures  @relation(fields: [postId], references: [id])
+  post      Content   @relation(fields: [postId], references: [id])
   postId    String    @db.ObjectId
   author    Users     @relation(fields: [authorId], references: [id])
   authorId  String    @db.ObjectId
@@ -146,7 +146,7 @@ model Comments {
 model Category {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  post        Pictures[]
+  post        Content[]
 }
 
 type Address {
@@ -158,7 +158,8 @@ type Address {
 
 enum TypePost {
   pic
-  reels
+  story
+  video
 }
 
 enum TypeSell {

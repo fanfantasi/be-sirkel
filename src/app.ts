@@ -7,7 +7,7 @@ import {
     followRoutes,
     likeRoutes,
     musicRoutes,
-    pictureRoutes,
+    contentRoutes,
     userRoutes
 } from "./routes";
 
@@ -54,7 +54,7 @@ class App {
         this.server.use(fileUpload());
         this.server.use('/uploads', rt.init(process.cwd() + '/uploads'));
         this.server.use('/uploads', express.static(process.cwd() + '/uploads'));
-        this.server.use('/v1/picture', pictureRoutes);
+        this.server.use('/v1/content', contentRoutes);
         this.server.use('/v1/user', userRoutes);
         this.server.use('/v1/category', categoryRoutes);
         this.server.use('/v1/music', musicRoutes);
