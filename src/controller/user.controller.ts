@@ -4,6 +4,7 @@ import responseData from "../services/response";
 const { v4: uuidv4 } = require('uuid');
 const { generateTokens } = require("../services/jwt");
 import { authController } from "../controller/auth.controller";
+const ApiVideoClient = require('@api.video/nodejs-client');
 
 export const userController = {
     async findMyID(req: Request, res: Response){
@@ -52,7 +53,7 @@ export const userController = {
 
     async createOrUpdate(req: Request, res: Response){
         try{
-            if (typeof req.body.email === 'undefined' || typeof req.body?.uid ==='undefined') {
+            if (typeof req.body?.email === 'undefined' || typeof req.body?.uid ==='undefined') {
                 return responseData.resBadRequest(res, 'You must provide an email.')
             }
             const user = await prisma.users.upsert({
@@ -83,6 +84,7 @@ export const userController = {
                 },
             })
         }catch(err){
+            console.log(err)
             return responseData.resBadRequest(res, `Login Unsuccessfully.`)
         }
     },
@@ -177,6 +179,19 @@ export const userController = {
         }catch(e){
             console.log(e)
             return responseData.resBadRequest(res, `Follow Unsuccessfully.`)
+        }
+    },
+
+    async generateTokenVideo(req: Request, res: Response){
+        try{
+            const client = new ApiVideoClient({ apiKey: process.env.API_KEY_VIDEO });
+            const tokenCreationPayload = {
+                ttl: 60, //1 menit
+              }; 
+            const uploadToken = await client.uploadTokens.createToken(tokenCreationPayload);
+            return responseData.resFindOne(res, 'token', uploadToken)
+        }catch(e){
+            return responseData.resBadRequest(res, `Generate token unsuccessfully.`)
         }
     }
 }

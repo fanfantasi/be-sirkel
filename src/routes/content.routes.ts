@@ -4,6 +4,7 @@ import isAuth from "../middleware";
 const routes = Router();
 
 routes.get("/", isAuth.isAuthenticated, contentController.find)
-routes.patch("/", isAuth.isAuthenticated, contentController.upsert)
+routes.post("/", isAuth.isAuthenticated, contentController.upsert)
+routes.post("/findone", isAuth.isAuthenticated, contentController.funOne)
 
 export default routes;

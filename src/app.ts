@@ -1,6 +1,6 @@
 import express from "express";
 const fileUpload = require('express-fileupload');
-const rt = require("thumb-express");
+const rt = require('quickthumb');
 var bodyParser = require('body-parser');
 import { 
     categoryRoutes,
@@ -51,8 +51,11 @@ class App {
             res.sendFile(path + "/index.html");
         });
           
-        this.server.use(fileUpload());
-        this.server.use('/uploads', rt.init(process.cwd() + '/uploads'));
+        this.server.use(fileUpload(
+            {useTempFiles : true,
+            tempFileDir : '/tmp/'}
+        ));
+        this.server.use('/uploads', rt.static(process.cwd() + '/uploads'));
         this.server.use('/uploads', express.static(process.cwd() + '/uploads'));
         this.server.use('/v1/content', contentRoutes);
         this.server.use('/v1/user', userRoutes);

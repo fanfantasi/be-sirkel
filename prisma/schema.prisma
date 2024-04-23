@@ -63,11 +63,12 @@ model Content {
   music         Music?    @relation(fields: [musicId], references: [id])
   musicId       String?   @db.ObjectId
   startPosition String?
-  stopPosition  String?
-  categoryId    String    @db.ObjectId
-  category      Category  @relation(fields: [categoryId], references: [id])
+  endPosition   String?
+  categoryId    String     @db.ObjectId
+  category      Category   @relation(fields: [categoryId], references: [id])
   caption       String
-  typepost      TypePost  @default(pic)
+  typepost      TypePost  @default(content)
+  videoId       String?
   author        Users     @relation(fields: [authorId], references: [id])
   authorId      String    @db.ObjectId
   likes         Likes[]
@@ -75,9 +76,10 @@ model Content {
   view          Views[]
   comments      Comments[]
   mentions      Mentions[]
+  location      String?
   long          String?
   lat           String?
-  sell          TypeSell        @default(ready)
+  sell          TypeSell        @default(none)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime?       @updatedAt
 }
@@ -106,6 +108,7 @@ model Files {
   height    Int?
   width     Int?
   type      String?
+  thumbnail String?
   post      Content  @relation(fields: [postId], references: [id])
   postId    String    @db.ObjectId
 }
@@ -157,14 +160,14 @@ type Address {
 }
 
 enum TypePost {
-  pic
+  content
   story
-  video
 }
 
 enum TypeSell {
   sold
   ready
+  none
 }
 
 
