@@ -20,8 +20,8 @@ export const pictureController = {
                 const index = Math.floor(Math.random() * values.length);
                 return values[index];
             }
-            const orderBy = randomPick(['caption', 'createdAt']);
-            const orderDir = randomPick([`asc`, `asc`]);
+            const orderBy = randomPick(['createdAt']);
+            const orderDir = randomPick([`desc`]);
             if (Object.keys(req.query).length !== 0){
                 state = await prisma.content.findMany({
                     where: req.query,
@@ -185,8 +185,15 @@ export const pictureController = {
                 state.map(async (e:any,i) => {
                     let pic:any = [];
                     e.file.map((f:any) => {
+                        let extension = f.file.split('.').pop().toLowerCase();
+                        let pfile = '';
+                        if(extension  === "mp4" || extension === "m4a"|| extension === "f4v" || extension  === "m4b" || extension  === "mov") {
+                            pfile=e.author.id+'/480/'+f.file;
+                        }else{
+                            pfile=e.author.id+'/'+f.file;
+                        }
                         pic.push({
-                            'file':e.author.id+'/'+f.file,
+                            'file': pfile,
                             'height':f.height,
                             'width':f.width,
                             'type':f.type,
@@ -405,7 +412,7 @@ export const pictureController = {
                 }
             }
             if (req.files){
-                uploadsController.uploadPicture(req.files, req.body.payload.userId, saveData.id, req.body);
+                await uploadsController.uploadPicture(req.files, req.body.payload.userId, saveData.id, req.body);
             }
 
             return responseData.resCreatedReturn(res, 'content', saveData)

@@ -8,7 +8,8 @@ import {
     likeRoutes,
     musicRoutes,
     contentRoutes,
-    userRoutes
+    userRoutes,
+    stickerRoutes
 } from "./routes";
 
 const path = __dirname;
@@ -63,6 +64,7 @@ class App {
         this.server.use('/v1/music', musicRoutes);
         this.server.use('/v1/like', likeRoutes);
         this.server.use('/v1/following', followRoutes);
+        this.server.use('/v1/sticker', stickerRoutes);
     }
 }
 

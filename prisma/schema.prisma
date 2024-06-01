@@ -152,6 +152,16 @@ model Category {
   post        Content[]
 }
 
+model Sticker {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  image       String
+}
+
+model Emoji {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  image       String
+}
+
 type Address {
   street String
   city   String

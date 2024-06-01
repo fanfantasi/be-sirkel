@@ -4,7 +4,15 @@ import responseData from "../services/response";
 var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 var sizeOf = require('image-size');
-const ApiVideoClient = require('@api.video/nodejs-client');
+var ffmpeg = require('fluent-ffmpeg');
+
+function baseName(str:any) {
+    var base = new String(str).substring(str.lastIndexOf('/') + 1); 
+    if(base.lastIndexOf(".") != -1) {
+        base = base.substring(0, base.lastIndexOf("."));
+    }     
+    return base;
+}
 
 export const uploadsController = {
     async uploadPicture(files:any, userId:String, postId:any, body:any){
@@ -64,6 +72,23 @@ export const uploadsController = {
                         const fileNameVid = 'vid_'+uuidv4()+'.'+file.name.split('.').pop();
                         await file.mv(dirVid+'/'+fileNameVid);
                         
+                        if (!fs.existsSync(dirVid+'/480')){
+                            await fs.mkdirSync(dirVid+'/480', { recursive: true });
+                        }
+                        if (!fs.existsSync(dirVid+'/720')){
+                            await fs.mkdirSync(dirVid+'/720', { recursive: true });
+                        }
+                        ffmpeg(dirVid+'/'+fileNameVid)
+                            // Generate 480 video
+                            .videoCodec('libx264')
+                            .size('480x?')
+                            .save(dirVid + '/480/'+fileNameVid)
+
+                            
+                            // .videoCodec('libx264')
+                            // .size('720x?')
+                            // .save(dirVid + '/720/'+fileNameVid);
+
                         sizeOf(dirVid+'/'+fileNameThumb, async function  (err:any, dimensions:any) {
                             const result = await prisma.files.findFirst({
                                 where:{

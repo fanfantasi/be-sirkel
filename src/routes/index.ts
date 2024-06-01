@@ -4,6 +4,7 @@ import categoryRoutes from './category.routes';
 import musicRoutes from './music.routes';
 import likeRoutes from './like.routes';
 import followRoutes from './following.routes';
+import stickerRoutes from './sticker.routes';
 
 export { 
     contentRoutes, 
@@ -11,5 +12,6 @@ export {
     categoryRoutes,
     musicRoutes,
     likeRoutes,
-    followRoutes
+    followRoutes,
+    stickerRoutes
 }
